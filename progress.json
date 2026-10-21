@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-21T00:42:50.220Z",
+  "generated_at": "2026-10-21T00:48:08.469Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -140,9 +140,9 @@
       "url": "https://www.deep-ml.com/problems/11",
       "path": "problems/0011-solve-linear-equations-using-jacobi-method",
       "first_solved_at": "2026-10-21T00:42:49.434Z",
-      "last_pushed_at": "2026-10-21T00:42:49.434Z",
+      "last_pushed_at": "2026-10-21T00:48:06.017Z",
       "language": "python",
-      "lines": 10
+      "lines": 20
     }
   }
 }
