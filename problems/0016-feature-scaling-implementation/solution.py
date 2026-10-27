@@ -1,9 +1,15 @@
-import numpy as np
-def feature_scaling(data: np.ndarray) -> (np.ndarray, np.ndarray):
-	# Your code here
-	# standardization
-    scaled_mat1 = np.round((data - data.mean(axis=0)) / data.std(axis=0), decimals=4)
-    # min-max normalization
-    scaled_mat2 = np.round((data - data.min(axis=0)) / (data.max(axis=0) - data.min(axis=0)), decimals=4)
+import torch
 
-    return (scaled_mat1, scaled_mat2)
+def feature_scaling(data) -> tuple[torch.Tensor, torch.Tensor]:
+    """
+    Standardize and Min-Max normalize input data using PyTorch.
+    Input: Tensor or convertible of shape (m,n).
+    Returns (standardized_data, normalized_data), both rounded to 4 decimals.
+    """
+    data_t = torch.as_tensor(data, dtype=torch.float)
+    # Your implementation here
+    standardized_data = torch.round((data_t - data_t.mean(dim=0, keepdim=True)) / data_t.std(dim=0, unbiased=False, keepdim=True), decimals=4)
+    
+    scaler = data_t.max(dim=0, keepdim=True).values - data_t.min(dim=0, keepdim=True).values
+    normalized_data = torch.round((data_t - data_t.min(dim=0, keepdim=True).values) / scaler, decimals=4)
+    return (standardized_data, normalized_data)
