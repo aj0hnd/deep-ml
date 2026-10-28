@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-28T00:33:42.652Z",
+  "generated_at": "2026-10-28T00:49:46.429Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -218,9 +218,9 @@
       "url": "https://www.deep-ml.com/problems/17",
       "path": "problems/0017-k-means-clustering",
       "first_solved_at": "2026-10-28T00:33:41.824Z",
-      "last_pushed_at": "2026-10-28T00:33:41.824Z",
+      "last_pushed_at": "2026-10-28T00:49:45.521Z",
       "language": "python",
-      "lines": 19
+      "lines": 27
     }
   }
 }

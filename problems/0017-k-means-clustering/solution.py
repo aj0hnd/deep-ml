@@ -1,19 +1,26 @@
-import numpy as np
-def k_means_clustering(points: list[tuple[float, ...]], k: int, initial_centroids: list[tuple[float, ...]], max_iterations: int) -> list[tuple[float, ...]]:
-	# Your code here
-	points = np.array(points, dtype=np.float32)
-    last_centroids = np.array(initial_centroids, dtype=np.float32)
+import torch
+
+def k_means_clustering(points, k, initial_centroids, max_iterations) -> list[tuple[float, ...]]:
+    """
+    Perform k-means clustering on `points` into `k` clusters.
+    points: tensor of shape (n_points, n_features)
+    initial_centroids: tensor of shape (k, n_features)
+    max_iterations: maximum number of iterations
+    Returns a list of k centroids as tuples, rounded to 4 decimals.
+    """
+    # Convert to tensors
+    points_t = torch.as_tensor(points, dtype=torch.float)
+    centroids = torch.as_tensor(initial_centroids, dtype=torch.float)
+    # Your implementation here
+    points_t = torch.as_tensor(points, dtype=torch.float)
+    centroids = torch.as_tensor(initial_centroids, dtype=torch.float)
     for _ in range(max_iterations):
-        euclidean = np.linalg.norm(points[:, None, :] - last_centroids[None, :, :], ord=2, axis=2)
-        groups_id = np.argmin(euclidean, axis=1)
-        curr_centroids = np.zeros_like(last_centroids)
-        for i in range(k):
-            curr_centroids[i] = np.mean(points[groups_id == i], axis=0)
-        
-        if np.array_equal(last_centroids, curr_centroids):
-            final_centriods = curr_centroids
+        euclidean = torch.norm(points_t[:, None, :] - centroids[None, ...], dim=2)
+        groups_id = torch.argmin(euclidean, dim=1)
+        new_centroids = torch.stack([torch.mean(points_t[groups_id==i], dim=0) for i in range(k)])
+
+        if torch.allclose(centroids, new_centroids):
             break
-        last_centroids = curr_centroids
-    
-    final_centriods = last_centroids
-    return [tuple(elem) for elem in final_centriods.tolist()]
+        centroids = new_centroids
+
+    return [tuple(elem) for elem in centroids.tolist()]
