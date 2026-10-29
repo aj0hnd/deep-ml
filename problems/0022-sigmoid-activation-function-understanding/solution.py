@@ -1,5 +1,12 @@
-import math
+import torch
 
 def sigmoid(z: float) -> float:
-	#Your code here
-	return 1 / (1 + math.exp(-z))
+    """
+    Compute the sigmoid activation function.
+    Input:
+      - z: float or torch scalar tensor
+    Returns:
+      - sigmoid(z) as Python float rounded to 4 decimals.
+    """
+    # Your implementation here
+    return torch.round(1 / (1 + torch.exp(-torch.tensor(z))), decimals=4).item()
