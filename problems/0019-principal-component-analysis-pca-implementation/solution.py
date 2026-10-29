@@ -1,25 +1,21 @@
-import numpy as np
+import torch
 
-def pca(data: np.ndarray, k: int) -> np.ndarray:
+def pca(data, k) -> torch.Tensor:
     """
-    Perform PCA and return the top k principal components.
-    
-    Args:
-        data: Input array of shape (n_samples, n_features)
-        k: Number of principal components to return
-    
-    Returns:
-        Principal components of shape (n_features, k), rounded to 4 decimals.
-        Each eigenvector's sign is fixed so its first non-zero element is positive.
+    Perform PCA on `data`, returning the top `k` principal components as a tensor.
+    Input: Tensor or convertible of shape (n_samples, n_features).
+    Returns: a torch.Tensor of shape (n_features, k), with floats rounded to 4 decimals.
+    Note: If an eigenvector's first non-zero value is negative, flip its sign.
     """
-    # Your code here
-    normed_data = (data - np.mean(data, axis=0, keepdims=True)) / np.std(data, axis=0, keepdims=True)
-    cov_mat = normed_data.T @ normed_data
-    eigvals, eigvecs = np.linalg.eigh(cov_mat)
+    # Your implementation here
+    data_t = torch.as_tensor(data, dtype=torch.float)
+    normed_data = (data_t - torch.mean(data_t, dim=0, keepdim=True)) / torch.std(data_t, dim=0, keepdim=True)
 
-    top_k_eigvals = np.argsort(eigvals, descending=True)[:k]
+    eigvals, eigvecs = torch.linalg.eigh(normed_data.T @ normed_data)
+    top_k_eigvals = torch.argsort(eigvals, descending=True)[:k]
     principals = eigvecs[:, top_k_eigvals]
-    convert = np.ones(k)
-    convert[principals[0, :] < 0] = -1
     
-    return np.round(principals * convert, decimals=4)
+    fliper = torch.ones(k)
+    fliper[principals[0, :] < 0] = -1
+    
+    return principals * fliper
