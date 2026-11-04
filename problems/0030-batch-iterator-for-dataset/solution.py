@@ -1,18 +1,26 @@
-import numpy as np
+import torch
+from torch.utils.data import TensorDataset, DataLoader
 
 def batch_iterator(X, y=None, batch_size=64):
-	# Your code here
-	n_exmaple = X.shape[0]
-    
+    """
+    Batch iterator for a dataset represented as PyTorch tensors.
+
+    Args:
+        X: Tensor of shape (n_samples, n_features)
+        y: Optional Tensor of shape (n_samples,)
+        batch_size: Number of samples per batch
+
+    Returns:
+        List of Tensor batches (or [X_batch, y_batch] pairs if y is provided)
+    """
+    # Hint: Use DataLoader with shuffle=False to preserve sample order.
+    ds = TensorDataset(X, y) if y is not None else TensorDataset(X)
+    dl = DataLoader(ds, batch_size=batch_size, shuffle=False)
+
     batches = []
-    start_idx = 0
-    while start_idx < n_exmaple:
-        x_batch = X[start_idx:start_idx + batch_size]
+    for batch in dl:
         if y is not None:
-            y_batch = y[start_idx:start_idx+batch_size]
-            batches.append([x_batch.tolist(), y_batch.tolist()])
+            batches.append(batch)
         else:
-            batches.append([x_batch.tolist()])
-        start_idx += batch_size
-    
+            batches.append(*batch)
     return batches
