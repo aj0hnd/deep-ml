@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T00:54:11.350Z",
+  "generated_at": "2026-11-05T00:57:02.877Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -400,9 +400,9 @@
       "url": "https://www.deep-ml.com/problems/34",
       "path": "problems/0034-one-hot-encoding-of-nominal-values",
       "first_solved_at": "2026-11-05T00:54:10.677Z",
-      "last_pushed_at": "2026-11-05T00:54:10.677Z",
+      "last_pushed_at": "2026-11-05T00:57:02.266Z",
       "language": "python",
-      "lines": 10
+      "lines": 15
     }
   }
 }
