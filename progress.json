@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T00:57:02.877Z",
+  "generated_at": "2026-11-05T23:57:26.444Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -401,6 +401,19 @@
       "path": "problems/0034-one-hot-encoding-of-nominal-values",
       "first_solved_at": "2026-11-05T00:54:10.677Z",
       "last_pushed_at": "2026-11-05T00:57:02.266Z",
+      "language": "python",
+      "lines": 15
+    },
+    "problem:33": {
+      "kind": "problem",
+      "id": "33",
+      "title": "Generate Random Subsets of a Dataset",
+      "difficulty": "medium",
+      "category": "Machine Learning",
+      "url": "https://www.deep-ml.com/problems/33",
+      "path": "problems/0033-generate-random-subsets-of-a-dataset",
+      "first_solved_at": "2026-11-05T23:57:23.344Z",
+      "last_pushed_at": "2026-11-05T23:57:23.344Z",
       "language": "python",
       "lines": 15
     }
