@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-05T23:57:26.444Z",
+  "generated_at": "2026-11-06T00:02:50.486Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -413,9 +413,9 @@
       "url": "https://www.deep-ml.com/problems/33",
       "path": "problems/0033-generate-random-subsets-of-a-dataset",
       "first_solved_at": "2026-11-05T23:57:23.344Z",
-      "last_pushed_at": "2026-11-05T23:57:23.344Z",
+      "last_pushed_at": "2026-11-06T00:02:47.071Z",
       "language": "python",
-      "lines": 15
+      "lines": 34
     }
   }
 }
