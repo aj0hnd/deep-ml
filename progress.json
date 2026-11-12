@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-12T00:16:08.310Z",
+  "generated_at": "2026-11-12T00:18:06.508Z",
   "items": {
     "problem:1": {
       "kind": "problem",
@@ -478,9 +478,9 @@
       "url": "https://www.deep-ml.com/problems/39",
       "path": "problems/0039-implementation-of-log-softmax-function",
       "first_solved_at": "2026-11-12T00:16:07.647Z",
-      "last_pushed_at": "2026-11-12T00:16:07.647Z",
+      "last_pushed_at": "2026-11-12T00:18:05.666Z",
       "language": "python",
-      "lines": 6
+      "lines": 16
     }
   }
 }
