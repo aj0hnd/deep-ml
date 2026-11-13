@@ -1,73 +1,85 @@
-
 import numpy as np
-import copy
-import math
+import torch
+import torch.nn.functional as F
+from typing import Tuple
 
-# DO NOT CHANGE SEED
+# DO NOT CHANGE SEED (used for deterministic init)
 np.random.seed(42)
 
-# DO NOT CHANGE LAYER CLASS
-class Layer(object):
+def _to_tensor(x: torch.Tensor | np.ndarray) -> torch.Tensor:
+    return x if isinstance(x, torch.Tensor) else torch.as_tensor(x, dtype=torch.float32)
 
-    def set_input_shape(self, shape):
+class Layer:
+    def set_input_shape(self, shape: Tuple[int, ...]):
         self.input_shape = shape
 
-    def layer_name(self):
+    def layer_name(self) -> str:
         return self.__class__.__name__
 
-    def parameters(self):
+    def parameters(self) -> int:
         return 0
 
-    def forward_pass(self, X, training):
-        raise NotImplementedError()
+    def forward_pass(self, X, training: bool = True):
+        raise NotImplementedError
 
     def backward_pass(self, accum_grad):
-        raise NotImplementedError()
+        raise NotImplementedError
 
-    def output_shape(self):
-        raise NotImplementedError()
+    def output_shape(self) -> Tuple[int, ...]:
+        raise NotImplementedError
 
-# Your task is to implement the Dense class based on the above structure
 class Dense(Layer):
-    def __init__(self, n_units, input_shape=None):
+    def __init__(self, n_units: int, input_shape: tuple[int, ...] | None = None):
+        self.n_units = n_units
         self.layer_input = None
         self.input_shape = input_shape
-        self.n_units = n_units
-        self.trainable = True
-        self.W = None
-        self.w0 = None
 
-    def initialize(self, optimizer):
-        # Initialize weights W, biases w0, and optimizers
-        limit = 1 / math.sqrt(self.input_shape[0])
-        self.W = np.random.uniform(-limit, limit, size=(self.input_shape[0], self.n_units))
-        self.w0 = np.zeros((1, self.n_units))
+        self.trainable = None
+        self.W = None # torch.Tensor with requires_grad=True
+        self.b = None # torch.Tensor with requires_grad=True
+        self._opt = None
 
-        self.optimizer = optimizer
+    def initialize(self, optimizer) -> None:
+        """
+        Initialize weights with a uniform distribution and biases with zeros.
+        
+        Hint: use numpy to create deterministic arrays, then convert to torch tensors.
+        also store the provided optimizer for updates.
+        """
+        limit = 1 / np.sqrt(self.input_shape[0])
+        self.W = torch.tensor(np.random.uniform(-limit, limit, size=(self.input_shape[0], self.n_units)), dtype=torch.float, requires_grad=True)
+        self.b = torch.zeros(1, self.n_units, dtype=torch.float, requires_grad=True)
+        self._opt = optimizer
+        print(self.W.shape, self.b.shape)
 
-    def parameters(self):
-        # Return total number of parameters
-        return self.W.size + self.w0.size
+    def number_of_parameters(self) -> int:
+        """Return total number of trainable parameters in W and b"""
+        total = 0
+        if self.W.requires_grad:
+            total += self.W.numel()
+        if self.b.requires_grad:
+            total += self.b.numel()
+        return total
 
-    def forward_pass(self, X, training=True):
-        # Compute and return the forward pass
+    def forward_pass(self, X, training: bool = True):
+        """Use torch.nn.funcional.linear for the forward pass (X @ W + b)."""
+        self.layer_input = _to_tensor(X).requires_grad_(True)
         if self.trainable is None:
             self.trainable = training
-        self.layer_input = X
-        out = X @ self.W + self.w0
-        return out
+        self.out = F.linear(self.layer_input, self.W.T, self.b)
+        return self.out
 
     def backward_pass(self, accum_grad):
-        # Compute gradients, update weights if trainable, return grad w.r.t. input
-        dinput = accum_grad @ self.W.T
-        dW = self.layer_input.T @ accum_grad
-        dw0 = np.sum(accum_grad, axis=0, keepdims=True)
-        if self.trainable:
-            self.W = self.optimizer.update(self.W, dW)
-            self.w0 = self.optimizer.update(self.w0, dw0)
-        
+        """
+        Use torch.autograd.grad to get dL/dW, dL/db given upstream gradient.
+        Then update params with the provided optimizer and return grad w.r.t input.
+        Hint: grad_input can be computed with a matmul against W.T
+        """
+        dW, db, dinput = torch.autograd.grad(
+            outputs=self.out,
+            inputs=(self.W, self.b, self.layer_input),
+            grad_outputs=_to_tensor(accum_grad).requires_grad_(True)
+        )
+        self.W = self._opt.update(self.W, dW)
+        self.b = self._opt.update(self.b, db)
         return dinput
-
-    def output_shape(self):
-        # Return output shape tuple
-        return (self.n_units,)
